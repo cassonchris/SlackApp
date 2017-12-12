@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SlackApp.Config;
 
 namespace SlackApp
 {
@@ -24,6 +25,8 @@ namespace SlackApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            services.Configure<TestAppConfig>(Configuration.GetSection("TestApp"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
