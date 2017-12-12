@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SlackApp.Models;
 
 namespace SlackApp.Controllers
 {
@@ -11,9 +12,10 @@ namespace SlackApp.Controllers
     [Route("api/Status")]
     public class StatusController : Controller
     {
-        public IActionResult Get()
+        [HttpPost]
+        public IActionResult Post([FromForm] SlashCommand slashCommand)
         {
-            return Ok("testing status");
+            return Ok(slashCommand.Text);
         }
     }
 }
