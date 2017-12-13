@@ -5,18 +5,23 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using SlackApp.Config;
+using SlackApp.Models;
+using SlackApp.Repositories;
 
 namespace SlackApp.Controllers
 {
     public class AuthorizationController : Controller
     {
         private readonly TestAppConfig _config;
+        private readonly IAppInstallRepository _installRepo;
         private readonly HttpClient _client;
 
-        public AuthorizationController(IOptions<TestAppConfig> options)
+        public AuthorizationController(IOptions<TestAppConfig> options, IAppInstallRepository installRepo)
         {
             _config = options.Value;
+            _installRepo = installRepo;
             _client = new HttpClient();
         }
 
@@ -30,7 +35,23 @@ namespace SlackApp.Controllers
 
             var content = await response.Content.ReadAsStringAsync();
 
-            return Ok(code);
+            var appInstall = JsonConvert.DeserializeObject<AppInstall>(content);
+
+            if (appInstall.Ok)
+            {
+                var recordsSaved = await _installRepo.SaveAppInstallAsync(appInstall);
+
+                if (recordsSaved > 0)
+                {
+                    return Ok(appInstall.AccessToken);
+                }
+                else
+                {
+                    return StatusCode(500, appInstall);
+                }
+            }
+
+            return RedirectToAction("Index", "Install");
         }
     }
 }

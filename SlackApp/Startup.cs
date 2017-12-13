@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SlackApp.Config;
+using SlackApp.Repositories;
 
 namespace SlackApp
 {
@@ -24,9 +25,13 @@ namespace SlackApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<TestAppContext>();
+
             services.AddMvc();
 
             services.Configure<TestAppConfig>(Configuration.GetSection("TestApp"));
+
+            services.AddScoped<IAppInstallRepository, AppInstallRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

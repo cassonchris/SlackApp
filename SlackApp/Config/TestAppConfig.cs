@@ -11,5 +11,12 @@ namespace SlackApp.Config
         public string ClientSecret { get; set; }
         public string VerificationToken { get; set; }
         public string RedirectUri { get; set; }
+
+        public ConnectionStrings ConnectionStrings { get; set; }
+    }
+
+    public class ConnectionStrings
+    {
+        public string TestAppConnection { get; set; }
     }
 }
