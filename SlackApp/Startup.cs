@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -15,9 +16,14 @@ namespace SlackApp
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup()
         {
-            Configuration = configuration;
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .AddEnvironmentVariables();
+
+            Configuration = builder.Build();
         }
 
         public IConfiguration Configuration { get; }
