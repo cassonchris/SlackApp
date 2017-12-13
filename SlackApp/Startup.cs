@@ -37,7 +37,14 @@ namespace SlackApp
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseMvc();
+            app.UseMvc(config =>
+            {
+                config.MapRoute(
+                    name: "Default",
+                    template: "{controller}/{action}/{id?}",
+                    defaults: new {controller = "Status", action = "Post"}
+                );
+            });
         }
     }
 }
