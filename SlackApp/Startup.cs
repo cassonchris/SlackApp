@@ -35,6 +35,7 @@ namespace SlackApp
 
             services.AddScoped<IAppInstallRepository, AppInstallRepository>();
 
+            services.AddScoped<IAuthorizationService, AuthorizationService>();
             services.AddScoped<IDndService, DndService>();
         }
 
