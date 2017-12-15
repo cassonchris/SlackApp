@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using SlackApp.Config;
-using SlackApp.Models;
+using SlackApp.Models.SlackWebApi;
 
 namespace SlackApp.Repositories
 {

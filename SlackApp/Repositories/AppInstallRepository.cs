@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SlackApp.Models;
-using SQLitePCL;
+using SlackApp.Models.SlackWebApi;
 
 namespace SlackApp.Repositories
 {

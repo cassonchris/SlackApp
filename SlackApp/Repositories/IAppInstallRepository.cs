@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using SlackApp.Models;
+using SlackApp.Models.SlackWebApi;
 
 namespace SlackApp.Repositories
 {

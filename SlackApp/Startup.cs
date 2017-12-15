@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using SlackApp.Config;
 using SlackApp.Repositories;
+using SlackApp.Services;
 
 namespace SlackApp
 {
@@ -36,8 +31,11 @@ namespace SlackApp
             services.AddMvc();
 
             services.Configure<TestAppConfig>(Configuration.GetSection("TestApp"));
+            services.Configure<SlackWebApiConfig>(Configuration.GetSection("SlackWebApi"));
 
             services.AddScoped<IAppInstallRepository, AppInstallRepository>();
+
+            services.AddScoped<IDndService, DndService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

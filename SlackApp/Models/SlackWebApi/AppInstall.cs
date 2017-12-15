@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Newtonsoft.Json;
 
-namespace SlackApp.Models
+namespace SlackApp.Models.SlackWebApi
 {
-    public class AppInstall
+    public class AppInstall : BaseResponse
     {
         [Required]
         [StringLength(250)]
@@ -27,8 +27,5 @@ namespace SlackApp.Models
         [StringLength(50)]
         [JsonProperty("team_id")]
         public string TeamId { get; set; }
-
-        [JsonProperty("ok")]
-        public bool Ok { get; set; }
     }
 }
