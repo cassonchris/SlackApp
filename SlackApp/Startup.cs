@@ -52,7 +52,7 @@ namespace SlackApp
                 config.MapRoute(
                     name: "Default",
                     template: "{controller}/{action}/{id?}",
-                    defaults: new {controller = "Status", action = "Post"}
+                    defaults: new {controller = "Install", action = "Index"}
                 );
             });
         }
