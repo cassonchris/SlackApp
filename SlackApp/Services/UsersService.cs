@@ -31,7 +31,25 @@ namespace SlackApp.Services
                 new KeyValuePair<string, string>("token", accessToken)
             };
 
-            var response = await _httpClient.PostAsync(_slackWebApiConfig.Users.SetPresence, new FormUrlEncodedContent(requestContent));
+            var response = await _httpClient.PostAsync(_slackWebApiConfig.Users.SetPresence, 
+                new FormUrlEncodedContent(requestContent));
+
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            return JsonConvert.DeserializeObject<BaseResponse>(responseContent).Ok;
+        }
+
+        public async Task<bool> SetStatus(string status, string accessToken)
+        {
+            var requestContent = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("name", "status_text"),
+                new KeyValuePair<string, string>("value", status),
+                new KeyValuePair<string, string>("token", accessToken)
+            };
+
+            var response = await _httpClient.PostAsync(_slackWebApiConfig.Users.Profile.Set,
+                new FormUrlEncodedContent(requestContent));
 
             var responseContent = await response.Content.ReadAsStringAsync();
 

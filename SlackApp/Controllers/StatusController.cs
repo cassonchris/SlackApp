@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SlackApp.Config;
@@ -34,29 +36,45 @@ namespace SlackApp.Controllers
             var install = _appInstallRepo.GetAppInstall(slashCommand.UserId);
             if (install == null)
             {
-                return Redirect($"https://slack.com/oauth/authorize?client_id={_config.ClientId}&scope=dnd:write,users:write");
+                return Redirect($"https://slack.com/oauth/authorize?client_id={_config.ClientId}&scope=dnd:write,users:write,users.profile:write");
             }
 
             var commandParts = slashCommand.Text.Split(' ', 2);
             var durationString = commandParts[0];
-            var presence = commandParts[1];
 
             if (!int.TryParse(durationString, out var duration))
             {
                 duration = 5;
             }
 
-            var dndOk = await _dndService.SetSnooze(duration, install.AccessToken);
-            var presenceOk = await _usersService.SetPresence(presence, install.AccessToken);
+            var message = new StringBuilder();
 
-            if (dndOk && presenceOk)
+            if (await _dndService.SetSnooze(duration, install.AccessToken))
             {
-                return Ok($"Snoozing for {duration} minutes. Presence set to {presence}.");
+                message.AppendLine($"Snoozing for {duration} minutes.");
             }
             else
             {
-                return StatusCode(500, "Can't sleep... too much red bull!!");
+                message.AppendLine("Failed to set snooze.");
             }
+
+            if (commandParts.Length > 1)
+            {
+                var status = commandParts[1];
+                if (!String.IsNullOrWhiteSpace(status))
+                {
+                    if (await _usersService.SetStatus(status, install.AccessToken))
+                    {
+                        message.AppendLine($"Status set to '{status}'");
+                    }
+                    else
+                    {
+                        message.AppendLine("Failed to set status.");
+                    }
+                }
+            }
+
+            return Ok(message.ToString());
         }
     }
 }

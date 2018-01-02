@@ -21,5 +21,11 @@
     public class Users
     {
         public string SetPresence { get; set; }
+        public Profile Profile { get; set; }
+    }
+
+    public class Profile
+    {
+        public string Set { get; set; }
     }
 }
