@@ -15,14 +15,17 @@ namespace SlackApp.Controllers
         private readonly TestAppConfig _config;
         private readonly IAppInstallRepository _appInstallRepo;
         private readonly IDndService _dndService;
+        private readonly IUsersService _usersService;
 
         public StatusController(IOptions<TestAppConfig> options, 
             IAppInstallRepository appInstallRepo,
-            IDndService dndService)
+            IDndService dndService,
+            IUsersService usersService)
         {
             _config = options.Value;
             _appInstallRepo = appInstallRepo;
             _dndService = dndService;
+            _usersService = usersService;
         }
 
         [HttpPost]
@@ -31,19 +34,24 @@ namespace SlackApp.Controllers
             var install = _appInstallRepo.GetAppInstall(slashCommand.UserId);
             if (install == null)
             {
-                return Redirect($"https://slack.com/oauth/authorize?client_id={_config.ClientId}&scope=dnd:write");
+                return Redirect($"https://slack.com/oauth/authorize?client_id={_config.ClientId}&scope=dnd:write,users:write");
             }
 
-            if (!int.TryParse(slashCommand.Text, out var duration))
+            var commandParts = slashCommand.Text.Split(' ', 2);
+            var durationString = commandParts[0];
+            var presence = commandParts[1];
+
+            if (!int.TryParse(durationString, out var duration))
             {
                 duration = 5;
             }
 
-            var ok = await _dndService.SetSnooze(duration, install.AccessToken);
+            var dndOk = await _dndService.SetSnooze(duration, install.AccessToken);
+            var presenceOk = await _usersService.SetPresence(presence, install.AccessToken);
 
-            if (ok)
+            if (dndOk && presenceOk)
             {
-                return Ok($"Snoozing for {duration} minutes");
+                return Ok($"Snoozing for {duration} minutes. Presence set to {presence}.");
             }
             else
             {
