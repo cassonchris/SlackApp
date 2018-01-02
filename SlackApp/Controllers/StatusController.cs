@@ -14,17 +14,20 @@ namespace SlackApp.Controllers
     [Route("api/Status")]
     public class StatusController : Controller
     {
-        private readonly TestAppConfig _config;
+        private readonly TestAppConfig _testAppConfig;
+        private readonly SlackWebApiConfig _slackWebApiConfig;
         private readonly IAppInstallRepository _appInstallRepo;
         private readonly IDndService _dndService;
         private readonly IUsersService _usersService;
 
-        public StatusController(IOptions<TestAppConfig> options, 
+        public StatusController(IOptions<TestAppConfig> testAppOptions, 
+            IOptions<SlackWebApiConfig> slackWebApiOptions,
             IAppInstallRepository appInstallRepo,
             IDndService dndService,
             IUsersService usersService)
         {
-            _config = options.Value;
+            _testAppConfig = testAppOptions.Value;
+            _slackWebApiConfig = slackWebApiOptions.Value;
             _appInstallRepo = appInstallRepo;
             _dndService = dndService;
             _usersService = usersService;
@@ -36,7 +39,7 @@ namespace SlackApp.Controllers
             var install = _appInstallRepo.GetAppInstall(slashCommand.UserId);
             if (install == null)
             {
-                return Redirect($"https://slack.com/oauth/authorize?client_id={_config.ClientId}&scope=dnd:write,users:write,users.profile:write");
+                return Redirect($"{_slackWebApiConfig.AuthorizeUrl}?client_id={_testAppConfig.ClientId}&scope={_testAppConfig.Scope}");
             }
 
             var commandParts = slashCommand.Text.Split(' ', 2);

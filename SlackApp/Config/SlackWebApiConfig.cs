@@ -3,6 +3,7 @@
     public class SlackWebApiConfig
     {
         public string BaseAddress { get; set; }
+        public string AuthorizeUrl { get; set; }
         public Dnd Dnd { get; set; }
         public OAuth OAuth { get; set; }
         public Users Users { get; set; }
