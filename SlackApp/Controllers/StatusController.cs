@@ -39,7 +39,7 @@ namespace SlackApp.Controllers
             var install = _appInstallRepo.GetAppInstall(slashCommand.UserId);
             if (install == null)
             {
-                return Redirect($"{_slackWebApiConfig.AuthorizeUrl}?client_id={_testAppConfig.ClientId}&scope={_testAppConfig.Scope}");
+                return Ok($"Add to slack -> {_slackWebApiConfig.AuthorizeUrl}?client_id={_testAppConfig.ClientId}&scope={_testAppConfig.Scope}");
             }
 
             var commandParts = slashCommand.Text.Split(' ', 2);
