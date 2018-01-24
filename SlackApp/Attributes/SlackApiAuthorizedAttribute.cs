@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Options;
 using SlackApp.Config;
 using SlackApp.Models;
+using SlackApp.Models.SlackWebApi;
 using SlackApp.Repositories;
 
 namespace SlackApp.Attributes
@@ -49,8 +50,31 @@ namespace SlackApp.Attributes
                 // set the result if an install doesn't exist
                 if (install == null)
                 {
-                    context.Result = new OkObjectResult($"Add to slack -> {_slackWebApiConfig.AuthorizeUrl}?client_id={_testAppConfig.ClientId}&scope={_testAppConfig.Scope}");
+                    // return the link to authorize the slack api
+                    context.Result =
+                        new OkObjectResult(
+                            $"Add to slack -> {_slackWebApiConfig.AuthorizeUrl}?client_id={_testAppConfig.ClientId}&scope={_testAppConfig.Scope}");
                     return;
+                }
+                else
+                {
+                    // get the install parameter
+                    var installProperty = context.ActionDescriptor.Parameters
+                        .SingleOrDefault(p => p.ParameterType == typeof(AppInstall));
+
+                    if (installProperty != null)
+                    {
+                        // add the install to the action arguments so it can be used in the action
+
+                        if (context.ActionArguments.ContainsKey(installProperty.Name))
+                        {
+                            context.ActionArguments[installProperty.Name] = install;
+                        }
+                        else
+                        {
+                            context.ActionArguments.Add(installProperty.Name, install);
+                        }
+                    }
                 }
             }
 

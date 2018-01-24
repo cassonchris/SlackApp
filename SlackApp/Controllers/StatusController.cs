@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SlackApp.Attributes;
 using SlackApp.Models;
-using SlackApp.Repositories;
+using SlackApp.Models.SlackWebApi;
 using SlackApp.Services;
 
 namespace SlackApp.Controllers
@@ -13,26 +13,25 @@ namespace SlackApp.Controllers
     [Route("api/Status")]
     public class StatusController : Controller
     {
-        private readonly IAppInstallRepository _appInstallRepo;
         private readonly IDndService _dndService;
         private readonly IUsersService _usersService;
 
-        public StatusController(IAppInstallRepository appInstallRepo,
-            IDndService dndService,
-            IUsersService usersService)
+        public StatusController(IDndService dndService, IUsersService usersService)
         {
-            _appInstallRepo = appInstallRepo;
             _dndService = dndService;
             _usersService = usersService;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="slashCommand"></param>
+        /// <param name="install">Gets set by the SlackApiAuthorized attribute.</param>
+        /// <returns></returns>
         [HttpPost]
         [SlackApiAuthorized]
-        public async Task<IActionResult> Post([FromForm] SlashCommand slashCommand)
+        public async Task<IActionResult> Post([FromForm] SlashCommand slashCommand, AppInstall install)
         {
-            // todo - SlackApiAuthorized gets the install, how do we not run it twice?
-            var install = _appInstallRepo.GetAppInstall(slashCommand.UserId);
-
             var commandParts = slashCommand.Text.Split(' ', 2);
             var durationString = commandParts[0];
 
