@@ -2,8 +2,7 @@
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using SlackApp.Config;
+using SlackApp.Attributes;
 using SlackApp.Models;
 using SlackApp.Repositories;
 using SlackApp.Services;
@@ -14,33 +13,25 @@ namespace SlackApp.Controllers
     [Route("api/Status")]
     public class StatusController : Controller
     {
-        private readonly TestAppConfig _testAppConfig;
-        private readonly SlackWebApiConfig _slackWebApiConfig;
         private readonly IAppInstallRepository _appInstallRepo;
         private readonly IDndService _dndService;
         private readonly IUsersService _usersService;
 
-        public StatusController(IOptions<TestAppConfig> testAppOptions, 
-            IOptions<SlackWebApiConfig> slackWebApiOptions,
-            IAppInstallRepository appInstallRepo,
+        public StatusController(IAppInstallRepository appInstallRepo,
             IDndService dndService,
             IUsersService usersService)
         {
-            _testAppConfig = testAppOptions.Value;
-            _slackWebApiConfig = slackWebApiOptions.Value;
             _appInstallRepo = appInstallRepo;
             _dndService = dndService;
             _usersService = usersService;
         }
 
         [HttpPost]
+        [SlackApiAuthorized]
         public async Task<IActionResult> Post([FromForm] SlashCommand slashCommand)
         {
+            // todo - SlackApiAuthorized gets the install, how do we not run it twice?
             var install = _appInstallRepo.GetAppInstall(slashCommand.UserId);
-            if (install == null)
-            {
-                return Ok($"Add to slack -> {_slackWebApiConfig.AuthorizeUrl}?client_id={_testAppConfig.ClientId}&scope={_testAppConfig.Scope}");
-            }
 
             var commandParts = slashCommand.Text.Split(' ', 2);
             var durationString = commandParts[0];
