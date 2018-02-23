@@ -7,9 +7,9 @@ namespace SlackApp.Repositories
 {
     public class AppInstallRepository : IAppInstallRepository
     {
-        private readonly TestAppContext _context;
+        private readonly SlackAppContext _context;
 
-        public AppInstallRepository(TestAppContext context)
+        public AppInstallRepository(SlackAppContext context)
         {
             _context = context;
         }

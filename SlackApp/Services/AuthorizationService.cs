@@ -12,16 +12,16 @@ namespace SlackApp.Services
     public class AuthorizationService : IAuthorizationService
     {
         private readonly IAppInstallRepository _installRepo;
-        private readonly TestAppConfig _testAppConfig;
+        private readonly SlackAppConfig _slackAppConfig;
         private readonly SlackWebApiConfig _slackWebApiConfig;
         private readonly HttpClient _httpClient;
 
         public AuthorizationService(IAppInstallRepository installRepo,
-            IOptions<TestAppConfig> testAppOptions, 
+            IOptions<SlackAppConfig> slackAppOptions, 
             IOptions<SlackWebApiConfig> slackWebApiOptions)
         {
             _installRepo = installRepo;
-            _testAppConfig = testAppOptions.Value;
+            _slackAppConfig = slackAppOptions.Value;
             _slackWebApiConfig = slackWebApiOptions.Value;
             _httpClient = new HttpClient
             {
@@ -32,7 +32,7 @@ namespace SlackApp.Services
         public async Task<bool> GrantAsync(string code)
         {
             var response = await _httpClient.GetAsync(
-                $"{_slackWebApiConfig.OAuth.Access}?client_id={_testAppConfig.ClientId}&client_secret={_testAppConfig.ClientSecret}&code={code}&redirect_uri={_testAppConfig.RedirectUri}");
+                $"{_slackWebApiConfig.OAuth.Access}?client_id={_slackAppConfig.ClientId}&client_secret={_slackAppConfig.ClientSecret}&code={code}&redirect_uri={_slackAppConfig.RedirectUri}");
 
             var content = await response.Content.ReadAsStringAsync();
 

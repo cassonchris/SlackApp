@@ -10,7 +10,7 @@ using System;
 
 namespace SlackApp.Migrations
 {
-    [DbContext(typeof(TestAppContext))]
+    [DbContext(typeof(SlackAppContext))]
     partial class TestAppContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

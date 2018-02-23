@@ -7,12 +7,12 @@ namespace SlackApp.Controllers
 {
     public class InstallController : Controller
     {
-        private readonly TestAppConfig _testAppConfig;
+        private readonly SlackAppConfig _slackAppConfig;
         private readonly SlackWebApiConfig _slackWebApiConfig;
 
-        public InstallController(IOptions<TestAppConfig> testAppOptions, IOptions<SlackWebApiConfig> slackWebApiOptions)
+        public InstallController(IOptions<SlackAppConfig> slackAppOptions, IOptions<SlackWebApiConfig> slackWebApiOptions)
         {
-            _testAppConfig = testAppOptions.Value;
+            _slackAppConfig = slackAppOptions.Value;
             _slackWebApiConfig = slackWebApiOptions.Value;
         }
 
@@ -21,7 +21,7 @@ namespace SlackApp.Controllers
             var vm = new InstallViewModel
             {
                 AuthorizeUrl =
-                    $"{_slackWebApiConfig.AuthorizeUrl}?client_id={_testAppConfig.ClientId}&scope={_testAppConfig.Scope}"
+                    $"{_slackWebApiConfig.AuthorizeUrl}?client_id={_slackAppConfig.ClientId}&scope={_slackAppConfig.Scope}"
             };
 
             return View(vm);

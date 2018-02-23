@@ -5,11 +5,11 @@ using SlackApp.Models.SlackWebApi;
 
 namespace SlackApp.Repositories
 {
-    public class TestAppContext : DbContext
+    public class SlackAppContext : DbContext
     {
-        private readonly TestAppConfig _config;
+        private readonly SlackAppConfig _config;
 
-        public TestAppContext(DbContextOptions<TestAppContext> dbContextOptions, IOptions<TestAppConfig> configOptions)
+        public SlackAppContext(DbContextOptions<SlackAppContext> dbContextOptions, IOptions<SlackAppConfig> configOptions)
             : base(dbContextOptions)
         {
             _config = configOptions.Value;
@@ -21,7 +21,7 @@ namespace SlackApp.Repositories
         {
             base.OnConfiguring(optionsBuilder);
 
-            optionsBuilder.UseSqlServer(_config.ConnectionStrings.TestAppConnection);
+            optionsBuilder.UseSqlServer(_config.ConnectionStrings.SlackAppConnection);
         }
     }
 }

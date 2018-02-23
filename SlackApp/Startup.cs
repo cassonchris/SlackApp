@@ -26,11 +26,11 @@ namespace SlackApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<TestAppContext>();
+            services.AddDbContext<SlackAppContext>();
 
             services.AddMvc();
 
-            services.Configure<TestAppConfig>(Configuration.GetSection("TestApp"));
+            services.Configure<SlackAppConfig>(Configuration.GetSection("SlackApp"));
             services.Configure<SlackWebApiConfig>(Configuration.GetSection("SlackWebApi"));
 
             services.AddScoped<IAppInstallRepository, AppInstallRepository>();

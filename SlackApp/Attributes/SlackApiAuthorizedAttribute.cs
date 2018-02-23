@@ -17,15 +17,15 @@ namespace SlackApp.Attributes
 
         private class SlackApiAuthorizedFilter : IActionFilter
         {
-            private readonly TestAppConfig _testAppConfig;
+            private readonly SlackAppConfig _slackAppConfig;
             private readonly SlackWebApiConfig _slackWebApiConfig;
             private readonly IAppInstallRepository _appInstallRepo;
 
-            public SlackApiAuthorizedFilter(IOptions<TestAppConfig> testAppOptions,
+            public SlackApiAuthorizedFilter(IOptions<SlackAppConfig> slackAppOptions,
                 IOptions<SlackWebApiConfig> slackWebApiOptions,
                 IAppInstallRepository appInstallRepo)
             {
-                _testAppConfig = testAppOptions.Value;
+                _slackAppConfig = slackAppOptions.Value;
                 _slackWebApiConfig = slackWebApiOptions.Value;
                 _appInstallRepo = appInstallRepo;
             }
@@ -53,7 +53,7 @@ namespace SlackApp.Attributes
                     // return the link to authorize the slack api
                     context.Result =
                         new OkObjectResult(
-                            $"Add to slack -> {_slackWebApiConfig.AuthorizeUrl}?client_id={_testAppConfig.ClientId}&scope={_testAppConfig.Scope}");
+                            $"Add to slack -> {_slackWebApiConfig.AuthorizeUrl}?client_id={_slackAppConfig.ClientId}&scope={_slackAppConfig.Scope}");
                     return;
                 }
                 else

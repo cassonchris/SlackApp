@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace SlackApp.Config
+﻿namespace SlackApp.Config
 {
-    public class TestAppConfig
+    public class SlackAppConfig
     {
         public string ClientId { get; set; }
         public string ClientSecret { get; set; }
@@ -18,6 +13,6 @@ namespace SlackApp.Config
 
     public class ConnectionStrings
     {
-        public string TestAppConnection { get; set; }
+        public string SlackAppConnection { get; set; }
     }
 }

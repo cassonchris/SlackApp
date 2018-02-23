@@ -10,7 +10,7 @@ using System;
 
 namespace SlackApp.Migrations
 {
-    [DbContext(typeof(TestAppContext))]
+    [DbContext(typeof(SlackAppContext))]
     [Migration("20171213010806_InitialCreate")]
     partial class InitialCreate
     {
